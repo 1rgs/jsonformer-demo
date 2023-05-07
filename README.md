@@ -1,6 +1,6 @@
-# Jsonformer demo
+# [Jsonformer Demo App](https://jsonformer.rahul.gs/)
 
-Demo app for [Jsonformer](https://github.com/1rgs/jsonformer).
+[Demo app](https://jsonformer.rahul.gs/) for [Jsonformer](https://github.com/1rgs/jsonformer).
 
 ## Developing
 
