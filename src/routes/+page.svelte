@@ -1,30 +1,26 @@
-<script>
-	import { Textarea, Label, Button, Spinner } from 'flowbite-svelte';
+<script lang="ts">
+	import { Textarea, Label, Button, Spinner, P, Heading } from 'flowbite-svelte';
 	import github from '$lib/assets/github.svg';
 	import modal from '$lib/assets/modal.svg';
+	import { onMount } from 'svelte';
 
 	let schema = JSON.stringify(
 		{
 			type: 'object',
 			properties: {
-				car: {
-					type: 'object',
-					properties: {
-						make: {
-							type: 'string'
-						},
-						model: {
-							type: 'string'
-						},
-						year: {
-							type: 'number'
-						},
-						colors: {
-							type: 'array',
-							items: {
-								type: 'string'
-							}
-						}
+				make: {
+					type: 'string'
+				},
+				model: {
+					type: 'string'
+				},
+				year: {
+					type: 'number'
+				},
+				colors: {
+					type: 'array',
+					items: {
+						type: 'string'
 					}
 				}
 			}
@@ -33,8 +29,7 @@
 		2
 	);
 
-	let prompt =
-		'Generate a JSON object for a Maruti Swift 2018 that is available in red and yellow colors';
+	let prompt = 'Generate a JSON object for a red 2012 Toyota Corolla.';
 
 	let response = JSON.stringify(
 		{
@@ -73,6 +68,30 @@
 
 		isLoading = false;
 	}
+
+	let curlCommand = '';
+
+	function updateCurlCommand(schema: string, prompt: string) {
+		let schemaValue = '';
+		try {
+			schemaValue = schema.trim() !== '' ? JSON.stringify(JSON.parse(schema)) : 'SCHEMA';
+		} catch (e) {
+			schemaValue = 'SCHEMA';
+		}
+		const promptValue = prompt.trim() !== '' ? JSON.stringify(prompt) : 'PROMPT';
+
+		curlCommand = `curl -X POST -H "Content-Type: application/json" -d '{"prompt": ${promptValue}, "json_schema": ${schemaValue}}' 'https://1rgs--jsonformer-example-3b-web.modal.run/generate'`;
+	}
+
+	function copyCurlCommand() {
+		navigator.clipboard.writeText(curlCommand);
+	}
+
+	onMount(() => {
+		updateCurlCommand(schema, prompt);
+	});
+
+	$: updateCurlCommand(schema, prompt);
 </script>
 
 <svelte:head>
@@ -91,9 +110,10 @@
 	<div class="response">
 		{response}
 	</div>
+
 	<form on:submit|preventDefault={submitForm}>
 		<Label for="jsonschema" class="mb-2 text-left">JSON Schema</Label>
-		<Textarea bind:value={schema} id="jsonschema" rows="4" name="jsonschema" />
+		<Textarea bind:value={schema} id="jsonschema" rows="4" name="jsonschema" class="h-96" />
 		<Label for="prompt" class="mb-2 text-left">Prompt</Label>
 		<Textarea bind:value={prompt} id="prompt" rows="4" name="prompt" />
 		<div class="submit-btn">
@@ -105,6 +125,9 @@
 		</div>
 	</form>
 
+	<div class="curl-command mt-8 text-center" on:click={copyCurlCommand}>
+		{curlCommand}
+	</div>
 	<div class="flex justify-center items-center flex-col gap-3 mt-8">
 		<p class="text-center">Powered by</p>
 
@@ -119,6 +142,21 @@
 </section>
 
 <style>
+	.curl-command {
+		margin-top: 20px;
+		cursor: pointer;
+		word-wrap: break-word;
+		user-select: all;
+		white-space: pre-wrap;
+		font-family: monospace;
+
+		cursor: pointer;
+		max-width: 500px;
+		background-color: var(--response-bg-color);
+		padding: 1rem;
+		border-radius: 0.5rem;
+	}
+
 	:root {
 		--text-color: #f8f8f8;
 		--input-text-color: #ffffff;
@@ -140,8 +178,8 @@
 
 	form {
 		width: 100%;
-		max-width: 500px;
 		margin-top: 40px;
+		max-width: 500px;
 	}
 
 	section {
