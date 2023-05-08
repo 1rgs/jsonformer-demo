@@ -11,7 +11,7 @@ CACHE_PATH: str = "/root/cache"
 # Download model and cache into image. We'll download models from the Huggingface Hub
 # and store them in our image. This skips the downloading of models during inference.
 def download_model():
-    _ = 2
+    _ = 3
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
     model = AutoModelForCausalLM.from_pretrained(
@@ -29,7 +29,7 @@ def download_model():
 image = (
     modal.Image.debian_slim(python_version="3.10")
     .pip_install(
-        "jsonformer",
+        "jsonformer==0.11.0",
         "transformers",
         "torch",
         "accelerate",

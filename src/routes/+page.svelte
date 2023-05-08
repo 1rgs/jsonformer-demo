@@ -33,12 +33,10 @@
 
 	let response = JSON.stringify(
 		{
-			car: {
-				make: 'Maruti',
-				model: 'Swift',
-				year: 2018.0,
-				colors: ['red']
-			}
+			make: 'Toyota',
+			model: 'Corolla',
+			year: 2012,
+			colors: ['Red']
 		},
 		null,
 		2
@@ -100,7 +98,7 @@
 </svelte:head>
 
 <section>
-	<div class="flex justify-center items-center mb-8 gap-3">
+	<div class="flex justify-center items-center mb-8 gap-2">
 		<h1>Jsonformer demo</h1>
 		<a href="https://github.com/1rgs/jsonformer" target="_blank" rel="noopener noreferrer">
 			<img src={github} alt="github" class="transform translate-y-1 width-6 hover:scale-110" />
@@ -110,6 +108,8 @@
 	<div class="response">
 		{response}
 	</div>
+
+	<strong>databricks/dolly-v2-3b</strong>
 
 	<form on:submit|preventDefault={submitForm}>
 		<Label for="jsonschema" class="mb-2 text-left">JSON Schema</Label>
